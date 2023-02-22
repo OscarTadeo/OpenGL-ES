@@ -37,7 +37,7 @@ public class Triangulo {
     static final int COORDS_PER_VERTEX = 3;
     static float triangleCoords[] = { // in counterclockwise order:
 
-                0.0f, 0.0f, 0.0f, // top
+                0.0f, 0.0f, 0.0f, // Arriba
 
                 -1.0f, -1.0f, 0.0f, // bottom left
 
