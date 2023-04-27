@@ -1,13 +1,14 @@
 package com.example.triangulosimple;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.opengl.GLSurfaceView;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
 
     /* Creamos el objeto de tipo GLSurfaceView para definir el area
-       de visualización en pantalla */
+    de visualización en pantalla */
     private GLSurfaceView gLView;
 
     @Override

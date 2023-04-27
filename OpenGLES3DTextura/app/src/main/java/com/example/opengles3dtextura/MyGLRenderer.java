@@ -207,8 +207,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // Dibujamos las figuras.
 
         mCubo.draw(matrizFinalCubo);
-        mCubo3.draw(matrizFinalC3);
         mCubo2.draw(matrizFinalC2);
+        mCubo3.draw(matrizFinalC3);
         mCubo4.draw(matrizFinalC4);
 
 
