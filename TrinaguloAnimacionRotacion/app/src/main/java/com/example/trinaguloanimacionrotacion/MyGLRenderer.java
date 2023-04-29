@@ -11,13 +11,13 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
-    private Triangle mTriangle;
-    private Square   mSquare;
+    private Triangulo mTriangulo;
+    private Cuadrado mCuadrado;
 
     // Obtenemos el contexto para poder extraer los shaderCode
     private Context context;
 
-    // vPMatrix is an abbreviation for "Model View Projection Matrix"
+    // vPMatrix es la abreviación para "Matriz Modelo Vista Proyección."
     private final float[] vPMatrix = new float[16];
 
     // Matriz de la figura.
@@ -26,16 +26,22 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     // Matriz de la vista
     private final float[] viewMatrix = new float[16];
 
-    // Matriz de rotacion
+    // Matriz de rotacion Triangulo.
     private float[] rotationMatrix = new float[16];
+
+    // Matriz de rotacion Cuadrado.
     private float[] rotationMatrixC = new float[16];
 
-    // Matriz de traslacion
+    // Matriz de traslacion Triangulo.
     private float[] translateMatrix = new float[16];
+
+    // Matriz de traslacion Cuadrado.
     private float[] translateMatrixC = new float[16];
 
-    // Matriz auxiliar
+    // Matriz auxiliar Triangulo.
     private float[] tempMatrix = new float[16];
+
+    // Matriz de traslacion Cuadrado.
     private float[] tempMatrixC = new float[16];
 
     public MyGLRenderer(Context c) {
@@ -43,14 +49,15 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     }
 
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
+
         // Asignamos un color al fondo
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
         // Inicializamos un triangulo
-        mTriangle = new Triangle(context);
+        mTriangulo = new Triangulo(context);
 
         // Inicializamos un cuadrado
-        mSquare = new Square();
+        mCuadrado = new Cuadrado();
     }
 
     public void onDrawFrame(GL10 unused) {
@@ -62,18 +69,17 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         float[] scratch = new float[16];
 
 
-        // Aplicamos el color al fondo
+        // Aplica el color al fondo
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
-        // Set the camera position (View matrix)
-        // Controlamos la posición de la camara
+        // Asigna la posición de la camara (Matriz de la vista).
         Matrix.setLookAtM(viewMatrix, 0, 0, 0, -4, 0f, 0f, 0f, 0f, 1f, 0.0f);
 
-        // Calculate the projection and view transformation
+        // Calcula la proyección y la transformación de la vista.
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
 
         /*// Dibujamos un trinagulo sin animacion.
-        mTriangle.draw(vPMatrix);*/
+        mTriangulo.draw(vPMatrix);*/
 
         // ----- Render Triangulo -----
         // Traslacion
@@ -83,12 +89,13 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         /*// Matriz que traslada el triangulo sin animación
         Matrix.multiplyMM(scratch, 0, vPMatrix,0, translateMatrix, 0);*/
 
-        // Create a rotation transformation for the triangle
+        // Crear una transformación de rotación para la figura.
         long time = SystemClock.uptimeMillis() % 4000L;
+
         // Velocidad de rotacion
         float angle = 0.090f * ((int) time);
 
-        // Dirección de rotacion
+        // Eje y dirección de rotacion.
         Matrix.setRotateM(rotationMatrix, 0, angle, 1, 0, 0);
 
         // Combine the rotation matrix with the projection and camera view
@@ -106,11 +113,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         Matrix.multiplyMM(ultima, 0,vPMatrix, 0,producto,0);
 
         // Dibujar Triangulo
-        mTriangle.draw(ultima);
+        mTriangulo.draw(ultima);
 
         // ----- Render Cuadrado -----
-
-        // Dibujar Cuadrado
 
         // Traslacion
         Matrix.setIdentityM(translateMatrixC,0);
@@ -128,13 +133,14 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         /*Matrix.multiplyMM(scratch, 0, vPMatrix, 0,rotationMatrix , 0);*/
 
         tempMatrixC = translateMatrixC.clone();
+
         // Multiplicamos la matriz de 'traslacion' por
         // matriz 'rotacion' para obtener la matriz 'producto'.
         Matrix.multiplyMM(productoC, 0, tempMatrixC, 0, rotationMatrixC,0);
 
         // Multiplicamos la matriz 'vPMatrix' por la matriz 'producto'
         Matrix.multiplyMM(ultimaC, 0,vPMatrix, 0,productoC,0);
-        mSquare.draw(ultimaC);
+        mCuadrado.draw(ultimaC);
     }
 
     @Override
@@ -143,19 +149,19 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         float ratio = (float) width / height;
 
-        // this projection matrix is applied to object coordinates
-        // in the onDrawFrame() method
+        // Esta matriz de proyección se aplica a las coordenadas
+        // del objeto en el método onDrawFrame().
         // Parametros de las dimenciones de la vista.
         Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1, 1, 3, 14);
     }
 
     public static int loadShader(int type, String shaderCode){
 
-        // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
-        // or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)
+        // Crea vertex shader de tipo (GLES20.GL_VERTEX_SHADER)
+        // o fragment shader de tipo (GLES20.GL_FRAGMENT_SHADER)
         int shader = GLES20.glCreateShader(type);
 
-        // add the source code to the shader and compile it
+        // Agrega el código fuente al shader y lo compíla.
         GLES20.glShaderSource(shader, shaderCode);
         GLES20.glCompileShader(shader);
 
