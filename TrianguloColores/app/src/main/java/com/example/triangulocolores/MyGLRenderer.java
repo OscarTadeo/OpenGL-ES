@@ -6,13 +6,12 @@ import javax.microedition.khronos.opengles.GL10;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
-import android.os.SystemClock;
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
-    private Triangle mTriangle;
+    private Triangulo mTriangulo;
 
-    // vPMatrix is an abbreviation for "Model View Projection Matrix"
+    // vPMatrix es la abreviación para "Matriz Modelo Vista Proyección."
     private final float[] vPMatrix = new float[16];
     private final float[] projectionMatrix = new float[16];
     private final float[] viewMatrix = new float[16];
@@ -21,46 +20,51 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     public volatile float mAngle;
 
+    // Variable para obtener el cambio de la transfromación
+    // desde la pantalla tactil.
     public float getAngle() {
         return mAngle;
     }
 
+    // Variable para asignar el cambio a la transformación.
     public void setAngle(float angle) {
         mAngle = angle;
     }
 
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
-        // Set the background frame color
+        // Asignamos un color al fondo
         GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-        // initialize a triangle
-        mTriangle = new Triangle();
+        // Inicializamos un triangulo.
+        mTriangulo = new Triangulo();
     }
 
     public void onDrawFrame(GL10 unused) {
         float[] scratch = new float[16];
 
-        // Redraw background color
+        // Aplica el color al fondo
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-        // Set the camera position (View matrix)
+
+        // Asigna la posición de la camara (Matriz de la vista).
         Matrix.setLookAtM(viewMatrix, 0, 0, 0, -4, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
 
-        // Calculate the projection and view transformation
+        // Calcula la proyección y la transformación de la vista.
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
 
         // Create a rotation for the triangle
         // long time = SystemClock.uptimeMillis() % 4000L;
         // float angle = 0.090f * ((int) time);
+
+        // Eje y dirección de rotacion.
         Matrix.setRotateM(rotationMatrix, 0, mAngle, 0.0f, -1.0f, 0.0f);
 
-        // Combine the rotation matrix with the projection and camera view
-        // Note that the vPMatrix factor *must be first* in order
-        // for the matrix multiplication product to be correct.
+        // Combina la matriz de rotación con la proyección y la vista de la cámara.
+        // Tenga en cuenta que el factor vPMatrix *debe ser el primero* para que el
+        // producto de multiplicación de matrices sea correcto.
         Matrix.multiplyMM(scratch, 0, vPMatrix, 0, rotationMatrix, 0);
 
-
-        // Draw shape
-        mTriangle.draw(scratch);
+        // Dibuja la figura.
+        mTriangulo.draw(scratch);
     }
 
     @Override
@@ -69,24 +73,22 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         float ratio = (float) width / height;
 
-        // this projection matrix is applied to object coordinates
-        // in the onDrawFrame() method
+        // Esta matriz de proyección se aplica a las coordenadas
+        // del objeto en el método onDrawFrame().
+        // Parametros de las dimenciones de la vista.
         Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
     }
 
     public static int loadShader(int type, String shaderCode){
 
-        // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
-        // or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)
+        // Crea vertex shader de tipo (GLES20.GL_VERTEX_SHADER)
+        // o fragment shader de tipo (GLES20.GL_FRAGMENT_SHADER)
         int shader = GLES20.glCreateShader(type);
 
-        // add the source code to the shader and compile it
+        // Agrega el código fuente al shader y lo compíla.
         GLES20.glShaderSource(shader, shaderCode);
         GLES20.glCompileShader(shader);
 
         return shader;
     }
-
-
 }
-
