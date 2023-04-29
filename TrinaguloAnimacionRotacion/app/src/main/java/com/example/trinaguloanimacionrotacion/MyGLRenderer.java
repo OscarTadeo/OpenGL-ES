@@ -53,10 +53,10 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // Asignamos un color al fondo
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-        // Inicializamos un triangulo
+        // Inicializamos un triangulo.
         mTriangulo = new Triangulo(context);
 
-        // Inicializamos un cuadrado
+        // Inicializamos un cuadrado.
         mCuadrado = new Cuadrado();
     }
 

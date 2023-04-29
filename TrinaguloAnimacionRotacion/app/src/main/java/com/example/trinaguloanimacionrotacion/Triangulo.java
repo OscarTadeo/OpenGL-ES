@@ -68,7 +68,7 @@ public class Triangulo {
             0.5f, -0.311004243f, 0.0f  // Derecha.
     };
 
-    // Asignamos color.
+    // Definimos color.
     float color[] = { 0.63671875f, 0.76953125f, 0.22265625f, 1.0f };
 
     public Triangulo(Context c) {
@@ -76,10 +76,11 @@ public class Triangulo {
 
         // Inicializa el vertex byte buffer para las coordenadas de la figura
         ByteBuffer bb = ByteBuffer.allocateDirect(
+
                 // (cantidad de  valores de las coordenadas * 4 bytes por flotante).
                 triangleCoords.length * 4);
 
-        // Usa el orden de bytes nativo del hardware del dispositivo.r
+        // Usa el orden de bytes nativo del hardware del dispositivo.
         bb.order(ByteOrder.nativeOrder());
 
         // Crea un buffer de punto flotante desde el ByteBuffer.
