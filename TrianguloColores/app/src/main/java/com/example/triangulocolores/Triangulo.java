@@ -62,10 +62,10 @@ public class Triangulo {
 
     public Triangulo() {
 
-        // Inicializa el vertex byte buffer para las coordenadas de la figura
+        // Inicializa el vertex byte buffer para las coordenadas de la figura.
         ByteBuffer vbb = ByteBuffer.allocateDirect(
 
-                // (number of coordinate values * 4 bytes per float)
+                // (cantidad de  valores de las coordenadas * 4 bytes por flotante).
                 triangleCoords.length * 4);
 
         // Usa el orden de bytes nativo del hardware del dispositivo.
