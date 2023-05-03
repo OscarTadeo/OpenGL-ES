@@ -132,7 +132,7 @@ public class Triangulo {
         // Dibuja la figura.
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
 
-        // Desactiva el arreglo de vertices.
+        // Desactiva el identificador de vertices.
         GLES20.glDisableVertexAttribArray(positionHandle);
 
         // Obtiene el identificador para la matriz de transformacion de la figura.
