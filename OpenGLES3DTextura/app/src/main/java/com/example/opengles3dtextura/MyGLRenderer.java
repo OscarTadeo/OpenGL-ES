@@ -68,8 +68,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // Asignamos el color del fondo
         GLES20.glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 
-
-
         // Nos permite saber que esta mas al fondo y no poder ver atravez de otras figuras.
         GLES20.glEnable( GLES20.GL_DEPTH_TEST );
         GLES20.glDepthFunc( GLES20.GL_LEQUAL );
@@ -92,8 +90,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // Dibujamos el fondo.
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
-
-
         /*------------------ Cámara -----------------*/
         // Asignamos la posición de la camara.
         Matrix.setLookAtM(viewMatrix, 0, 0, 0, 9, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
@@ -101,12 +97,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // Se calcula la transformación de proyección y vista
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
 
-        // Create a rotation for the Piramide
-        // long time = SystemClock.uptimeMillis() % 4000L;
-        // float angle = 0.090f * ((int) time);
-
         /*------------------ Cubo -----------------*/
-
 
         // Matrices para el Cubo.
         float[] mExTCubo = new float[16];
@@ -124,14 +115,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         // Rotacion.
         matrizTemp = mExTCubo.clone();
-
         Matrix.setRotateM(matrizRotacionCubo, 0, mAngle, 1.0f, 1.0f, -1.0f);
-
         Matrix.multiplyMM(mExTxRCubo, 0 , matrizTemp, 0, matrizRotacionCubo,0);
         Matrix.multiplyMM(matrizFinalCubo, 0, vPMatrix,0, mExTxRCubo, 0);
-
-
-
 
         /*------------------ Cubo2 -----------------*/
 
@@ -175,12 +161,10 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         // Rotacion.
         matrizTempC3 = mExTC3.clone();
-        Matrix.setRotateM(matrizRotacionCubo3, 0, mAngle, 1.0f, 1.0f, -1.0f);
+        Matrix.setRotateM(matrizRotacionCubo3, 0, mAngle, 1.0f, 1.0f, 1.0f);
 
         Matrix.multiplyMM(mExTxRC3, 0 , matrizTempC3, 0, matrizRotacionCubo3,0);
         Matrix.multiplyMM(matrizFinalC3, 0, vPMatrix,0, mExTxRC3, 0);
-
-
 
         /*------------------ Cubo4 -----------------*/
 
@@ -199,47 +183,41 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         // Rotacion.
         matrizTempC4 = mExTC4.clone();
-        Matrix.setRotateM(matrizRotacionCubo4, 0, mAngle, 1.0f, 1.0f, -1.0f);
+        Matrix.setRotateM(matrizRotacionCubo4, 0, angle, -1.0f, -1.0f, 1.0f);
 
         Matrix.multiplyMM(mExTxRC4, 0 , matrizTempC4, 0, matrizRotacionCubo4,0);
         Matrix.multiplyMM(matrizFinalC4, 0, vPMatrix,0, mExTxRC4, 0);
 
         // Dibujamos las figuras.
-
         mCubo.draw(matrizFinalCubo);
         mCubo2.draw(matrizFinalC2);
         mCubo3.draw(matrizFinalC3);
         mCubo4.draw(matrizFinalC4);
-
-
     }
 
     @Override
     public void onSurfaceChanged(GL10 unused, int width, int height) {
 
-
         GLES20.glViewport(0, 0, width, height);
 
         float ratio = (float) width / height;
 
-        // this projection matrix is applied to object coordinates
-        // in the onDrawFrame() method
+        // Esta matriz de proyección se aplica a las coordenadas
+        // del objeto en el método onDrawFrame().
+        // Parametros de las dimenciones de la vista.
         Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1, 1, 3, 14);
     }
 
     public static int loadShader(int type, String shaderCode){
 
-        // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
-        // or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)
+        // Crea vertex shader de tipo (GLES20.GL_VERTEX_SHADER)
+        // o fragment shader de tipo (GLES20.GL_FRAGMENT_SHADER)
         int shader = GLES20.glCreateShader(type);
 
-        // Se agrega el código fuente al shader y compilamos
+        // Agrega el código fuente al shader y lo compíla.
         GLES20.glShaderSource(shader, shaderCode);
         GLES20.glCompileShader(shader);
 
         return shader;
     }
-
-
 }
-

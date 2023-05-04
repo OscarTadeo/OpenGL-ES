@@ -15,25 +15,22 @@ class MyGLSurfaceView extends GLSurfaceView {
     public MyGLSurfaceView(Context context){
         super(context);
 
-        // Create an OpenGL ES 2.0 context
+        // Crea un contexto OpenGL ES 2.0
         setEGLContextClientVersion(2);
 
         renderer = new MyGLRenderer(getContext());
 
-        /*// Para tener control de los buffer
-        setEGLConfigChooser(true);
-        setEGLConfigChooser(8, 8, 8, 8, 16, 0);*/
-
-        // Set the Renderer for drawing on the GLSurfaceView
-
+        // Asigna el objeto encargado de renderizar los dibujos.
         setRenderer(renderer);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        // MotionEvent reports input details from the touch screen
-        // and other input controls. In this case, you are only
-        // interested in events where the touch position changed.
+        // MotionEvent reporta los detalles de entrada desde la pantalla táctil
+        // y otros controles de entrada.
+
+        // En este caso, solo los eventos en los que cambia
+        // la posición cuando se toca la pantalla tactil.
 
         float x = e.getX();
         float y = e.getY();

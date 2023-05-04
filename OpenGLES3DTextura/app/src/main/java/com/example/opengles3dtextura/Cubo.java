@@ -16,10 +16,10 @@ import java.nio.FloatBuffer;
 
 public class Cubo {
 
-    private FloatBuffer vertexBuffer;
-    private FloatBuffer colorBuffer;
-    private FloatBuffer mCubeTextureCoordinates;
-    private ByteBuffer indexBuffer;
+    private FloatBuffer vertexBuffer; // Buffer para el arreglo de vertices.
+    private FloatBuffer colorBuffer;  // Buffer para el arreglo de colores.
+    private FloatBuffer mCubeTextureCoordinates; // Buffer para el arreglo de coords de la textura.
+    private ByteBuffer indexBuffer;   // Buffer para el arreglo de indices.
 
     private final int mProgram;
 
@@ -29,18 +29,19 @@ public class Cubo {
     private int positionHandle;
     private int colorHandle;
 
-    /** This will be used to pass in the texture. */
+    // Variable para pasar la textura al programa.
     private int mTextureUniformHandle;
 
-    /** This will be used to pass in model texture coordinate information. */
+    // Variable para pasar la informacion de las coordenadas de la textura del modelo (Cubo).
     private int mTextureCoordinateHandle;
 
+    // Variable donde se carga la textura.
     private int mTextureDataHandle;
 
-    // Número de coordenadas por vertice en vertices[].
+    // Definimos el número de coordenadas para vertices.
     private static final int COORDS_PER_VERTEX = 3;
 
-    // Tamaño de vértice en bytes.
+    // 4 bytes por vertice.
     private final int vertexStride = COORDS_PER_VERTEX * 4;
 
     // Número de valores por colores en colores[].
@@ -49,6 +50,7 @@ public class Cubo {
     // Tamaño del color en bytes
     private final int COLOR_STRIDE = VALUES_PER_COLOR * 4;
 
+    // Variable para acceder y asignar la transformación de la vista.
     private int vPMatrixHandle;
 
     // Vertices del cubo
@@ -94,40 +96,40 @@ public class Cubo {
     // Colores para los vertices
     private static final float colores[] = {
             // Cara frontal
-            0.0f, 1.0f, 1.0f, 1.0f, // CYAN
-            1.0f, 0.0f, 1.0f, 1.0f, // ROSA
-            1.0f, 1.0f, 0.0f, 1.0f, // AMARILLO
-            0.0f, 1.0f, 0.0f, 1.0f, // VERDE
+            0.0f, 1.0f, 1.0f, 1.0f, // Cyan.
+            1.0f, 0.0f, 1.0f, 1.0f, // Rosa.
+            1.0f, 1.0f, 0.0f, 1.0f, // Amarillo.
+            0.0f, 1.0f, 0.0f, 1.0f, // Verde.
 
             // Cara izquierda
-            1.0f, 0.0f, 0.0f, 1.0f, // ROJO
-            0.0f, 1.0f, 1.0f, 1.0f, // CYAN
-            0.0f, 1.0f, 0.0f, 1.0f, // VERDE
-            1.0f, 1.0f, 0.0f, 1.0f, // AMARILLO
+            1.0f, 0.0f, 0.0f, 1.0f, // Rojo.
+            0.0f, 1.0f, 1.0f, 1.0f, // Cyan.
+            0.0f, 1.0f, 0.0f, 1.0f, // Verde.
+            1.0f, 1.0f, 0.0f, 1.0f, // Amarillo.
 
             // Cara Trasera.
-            1.0f, 1.0f, 1.0f, 1.0f, // BLANCO
-            1.0f, 0.0f, 0.0f, 1.0f, // ROJO
-            1.0f, 1.0f, 0.0f, 1.0f, // AMARILLO
-            0.0f, 0.0f, 1.0f, 1.0f, // AZUL
+            1.0f, 1.0f, 1.0f, 1.0f, // Blanco.
+            1.0f, 0.0f, 0.0f, 1.0f, // Rojo.
+            1.0f, 1.0f, 0.0f, 1.0f, // Amarillo.
+            0.0f, 0.0f, 1.0f, 1.0f, // Azul.
 
             // Cara derecha.
-            1.0f, 0.0f, 1.0f, 1.0f, // ROSA
-            1.0f, 1.0f, 1.0f, 1.0f, // BLANCO
-            0.0f, 0.0f, 1.0f, 1.0f, // AZUL
-            1.0f, 1.0f, 0.0f, 1.0f, // AMARILLO
+            1.0f, 0.0f, 1.0f, 1.0f, // Rosa.
+            1.0f, 1.0f, 1.0f, 1.0f, // Blanco.
+            0.0f, 0.0f, 1.0f, 1.0f, // Azul.
+            1.0f, 1.0f, 0.0f, 1.0f, // Amarillo.
 
             // Cara superior.
-            0.0f, 1.0f, 0.0f, 1.0f, // VERDE
-            1.0f, 1.0f, 0.0f, 1.0f, // AMARILLO
-            0.0f, 0.0f, 1.0f, 1.0f, // AZUL
-            1.0f, 1.0f, 0.0f, 1.0f, // AMARILLO
+            0.0f, 1.0f, 0.0f, 1.0f, // Verde.
+            1.0f, 1.0f, 0.0f, 1.0f, // Amarillo.
+            0.0f, 0.0f, 1.0f, 1.0f, // Azul.
+            1.0f, 1.0f, 0.0f, 1.0f, // Amarillo.
 
             // Cara Inferior.
-            0.0f, 1.0f, 1.0f, 1.0f, // CYAN
-            1.0f, 0.0f, 1.0f, 1.0f, // ROSA
-            1.0f, 1.0f, 1.0f, 1.0f, // BLANCO
-            1.0f, 0.0f, 0.0f, 1.0f, // ROJO
+            0.0f, 1.0f, 1.0f, 1.0f, // Cyan.
+            1.0f, 0.0f, 1.0f, 1.0f, // Rosa.
+            1.0f, 1.0f, 1.0f, 1.0f, // Blanco.
+            1.0f, 0.0f, 0.0f, 1.0f, // Rojo.
     };
 
     // Orden en que se dibujan los triangulos
@@ -140,6 +142,7 @@ public class Cubo {
             20, 21, 23, 21, 22, 23
     };
 
+    // Coordenadas para la textura.
     final float[] cubeTextureCoordinateData =
             {
                     // Cara frontal.
@@ -186,12 +189,12 @@ public class Cubo {
     private static String fragmentShaderCode = "";
 
     public String leerArchivo(String file, Context con){
-        //Log.d("Leyo","1");
+
         AssetManager assetManager = con.getResources().getAssets();
         Log.d("Leyo","Se accedio a la carpeta de assets");
         String mytext = "";
         try{
-            //Log.d("Leyo","try");
+
             InputStream instream = assetManager.open(file);
             Log.d("Leyo","Abriendo recurso: "+ file);
             int size = instream.available();
@@ -209,6 +212,7 @@ public class Cubo {
         }
     }
 
+    // Metodo para mandar cargar la textura.
     public int loadTexture(Context ctx, final int resourceId)
     {
         final int[] textureHandle = new int[1];
@@ -279,7 +283,7 @@ public class Cubo {
         indexBuffer.put(indices);
         indexBuffer.position(0);
 
-        /** Texture buffer*/
+        // Textura buffer
         mCubeTextureCoordinates = ByteBuffer.allocateDirect(cubeTextureCoordinateData.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
         mCubeTextureCoordinates.put(cubeTextureCoordinateData).position(0);
 
@@ -289,71 +293,57 @@ public class Cubo {
         // Se lee el código fragment shader desde archivo
         fragmentShaderCode = leerArchivo("CuboFragmentShader.glsl",c);
 
-        /** Nueva linea */
+        // Cargamos la textura.
         mTextureDataHandle = loadTexture(c, R.drawable.pikachu);
 
-        // Se inicializa el programa (Creacion del programa "OpenGL ES" en vacio).
+        // Crea un programa OpenGL ES vacío.
         mProgram = GLES20.glCreateProgram();
 
-        /*// Se agregan los shader code al programa.
-        GLES20.glAttachShader(mProgram, MyGLRenderer.loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode));
-        GLES20.glAttachShader(mProgram, MyGLRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode));*/
-
-        // Se agregan los shader code al programa.
+        // Se cargan los shaders.
         int vertexShader = MyGLRenderer.loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
         int fragmentShader = MyGLRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
 
+        // Agrega el vertex shader al programa.
         GLES20.glAttachShader(mProgram, vertexShader);
+
+        // Agrega el fragment shader al programa.
         GLES20.glAttachShader(mProgram, fragmentShader);
 
-        // Creación del programa "OpenGL ES" ejecutable.
+        // Crea un programa OpenGL ES ejecutable.
         GLES20.glLinkProgram(mProgram);
     }
 
-    /*
-     * Encapsula las instrucciones de OpenGL ES para dibujar la figura.
-     *
-     * @param mvpMatrix
-     *      La matriz Model View Project en la que se dibuja la figura.
-     */
     public void draw(float[] mvpMatrix) {
 
-
-        // Se agrega el programa al entorno OpenGL ES.
+        // Agrega el programa al ambiente de OpenGL ES.
         GLES20.glUseProgram(mProgram);
 
-        // Se preparan los datos de las coordenadas del cubo.
+        // Obtiene el identificador vPosition desde vertex shader.
         positionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
         GLES20.glEnableVertexAttribArray(positionHandle);
         GLES20.glVertexAttribPointer(
                 positionHandle, 3, GLES20.GL_FLOAT, false, vertexStride, vertexBuffer);
 
-        // Se preparan los datos de color del cubo.
+        // Obtiene el identificador a_color desde fragment shader.
         colorHandle = GLES20.glGetAttribLocation(mProgram, "a_color");
         GLES20.glEnableVertexAttribArray(colorHandle);
         GLES20.glVertexAttribPointer(
                 colorHandle, 4, GLES20.GL_FLOAT, false, COLOR_STRIDE, colorBuffer);
 
-        /** Se preparan los datos de la textura del cubo.*/
+        // Obtiene el identificador a_TexCoordinate de la textura del cubo.
         mTextureCoordinateHandle = GLES20.glGetAttribLocation(mProgram, "a_TexCoordinate");
-
         GLES20.glEnableVertexAttribArray(mTextureCoordinateHandle);
-
         GLES20.glVertexAttribPointer(mTextureCoordinateHandle, 2, GLES20.GL_FLOAT, false,
                 0, mCubeTextureCoordinates);
-        /*GLES20.glVertexAttribPointer(
-                mTextureCoordinateHandle, 2, GLES20.GL_FLOAT, false,
-                0, mCubeTextureCoordinates);*/
 
-
-        // Se aplica la transformación de proyección y vista.
+        // Obtiene el identificador para la matriz de transformacion de la figura.
         vPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
 
-        /** Nueva linea*/
+        // Obtiene el identificador u_Texture desde el fragment shader.
         mTextureUniformHandle = GLES20.glGetUniformLocation(mProgram, "u_Texture");
 
-        /** Con esta linea definimos que textura es asignada
-         * Se tomará la textura definida en GLES20.GL_TEXTURE0, ..., GLES20.GL_TEXTUREN*/
+        // Con esta linea definimos que textura es asignada
+        // Se tomará la textura definida en GLES20.GL_TEXTURE0, ..., GLES20.GL_TEXTUREN.
         GLES20.glUniform1i(mTextureUniformHandle, 0);
 
         GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, mvpMatrix, 0);
@@ -362,13 +352,8 @@ public class Cubo {
         GLES20.glDrawElements(
                 GLES20.GL_TRIANGLES, indices.length, GLES20.GL_UNSIGNED_BYTE, indexBuffer);
 
-        // Se Deshabilitan las matrices de vértices.
+        // Desactiva los identificadores.
         GLES20.glDisableVertexAttribArray(positionHandle);
         GLES20.glDisableVertexAttribArray(colorHandle);
-
-
-        /*GLES20.glEnable(GLES20.GL_CULL_FACE);*/
-
-
     }
 }
