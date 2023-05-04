@@ -14,21 +14,10 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Create a GLSurfaceView instance and set it
-        // as the ContentView for this Activity.
+        /* Creamos una instacia de GLSurfaceView y la configuramos
+          como ContentView para esta actividad*/
         glView = new MyGLSurfaceView(this);
         setContentView(glView);
-    }
-
-    @Override
-    protected void onStart(){
-        super.onStart();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        glView.onPause();
     }
 
     @Override

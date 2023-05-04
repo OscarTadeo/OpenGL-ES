@@ -28,7 +28,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     private float[] matrizRotacionCubo = new float[16];
     private float[] matrizRotacionCuboC = new float[16];
 
-
     // Matriz de escala.
     private float[] matrizEscalaCubo = new float[16];
     private float[] matrizEscalaCuboC = new float[16];
@@ -67,11 +66,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         GLES20.glClearDepthf(1.0f);
 
-
         mCubo = new Cubo();
-
         mCuboColores =  new CuboColores(context);
-
     }
 
     public void onDrawFrame(GL10 unused) {
@@ -86,10 +82,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         // Se calcula la transformación de proyección y vista
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
-
-        // Create a rotation for the Piramide
-        // long time = SystemClock.uptimeMillis() % 4000L;
-        // float angle = 0.090f * ((int) time);
 
         /*------------------ Cubo -----------------*/
 
@@ -109,13 +101,11 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         // Rotacion.
         matrizTemp = mExTCubo.clone();
-
         Matrix.setRotateM(matrizRotacionCubo, 0, mAngle, 1.0f, 1.0f, -1.0f);
-
         Matrix.multiplyMM(mExTxRCubo, 0 , matrizTemp, 0, matrizRotacionCubo,0);
         Matrix.multiplyMM(matrizFinalCubo, 0, vPMatrix,0, mExTxRCubo, 0);
 
-        /*------------------ Cubo Colorido -----------------*/
+        /*------------------ Cubo Colores -----------------*/
 
         float[] mExTCC = new float[16];
         float[] mExTxRCC = new float[16];
@@ -141,7 +131,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         Matrix.multiplyMM(matrizFinalCC, 0, vPMatrix,0, mExTxRCC, 0);
 
         // Dibujamos las figuras.
-
         mCubo.draw(matrizFinalCubo);
         mCuboColores.draw(matrizFinalCC);
 
@@ -153,24 +142,22 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         float ratio = (float) width / height;
 
-        // this projection matrix is applied to object coordinates
-        // in the onDrawFrame() method
+        // Esta matriz de proyección se aplica a las coordenadas
+        // del objeto en el método onDrawFrame().
+        // Parametros de las dimenciones de la vista.
         Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1, 1, 3, 14);
     }
 
     public static int loadShader(int type, String shaderCode){
 
-        // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
-        // or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)
+        // Crea vertex shader de tipo (GLES20.GL_VERTEX_SHADER)
+        // o fragment shader de tipo (GLES20.GL_FRAGMENT_SHADER)
         int shader = GLES20.glCreateShader(type);
 
-        // Se agrega el código fuente al shader y compilamos
+        // Agrega el código fuente al shader y lo compíla.
         GLES20.glShaderSource(shader, shaderCode);
         GLES20.glCompileShader(shader);
 
         return shader;
     }
-
-
 }
-

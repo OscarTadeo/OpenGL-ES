@@ -13,9 +13,9 @@ import java.nio.FloatBuffer;
 
 public class CuboColores {
 
-    private FloatBuffer vertexBuffer;
-    private FloatBuffer colorBuffer;
-    private ByteBuffer indexBuffer;
+    private FloatBuffer vertexBuffer; // Buffer para el arreglo de vertices.
+    private FloatBuffer colorBuffer;  // Buffer para el arreglo de colores.
+    private ByteBuffer indexBuffer;   // Buffer para el arreglo de indices.
 
     private final int mProgram;
 
@@ -25,10 +25,10 @@ public class CuboColores {
     private int positionHandle;
     private int colorHandle;
 
-    // Número de coordenadas por vertice en vertices[].
+    // Definimos el número de coordenadas para vertices.
     private static final int COORDS_PER_VERTEX = 3;
 
-    // Tamaño de vértice en bytes.
+    // 4 bytes por vertice.
     private final int vertexStride = COORDS_PER_VERTEX * 4;
 
     // Número de valores por colores en colores[].
@@ -37,9 +37,10 @@ public class CuboColores {
     // Tamaño del color en bytes
     private final int COLOR_STRIDE = VALUES_PER_COLOR * 4;
 
+    // Variable para acceder y asignar la transformación de la vista.
     private int vPMatrixHandle;
 
-    // Vertices del cubo
+    // Vertices del cubo.
     private static final float vertices[] = {
             -1.0f, -1.0f, -1.0f,
             1.0f, -1.0f, -1.0f,
@@ -51,16 +52,16 @@ public class CuboColores {
             -1.0f, 1.0f, 1.0f
     };
 
-    // Colores para los vertices
+    // Colores para los vertices.
     private static final float colores[] = {
-            0.0f, 1.0f, 1.0f, 1.0f, // CYAN
-            1.0f, 0.0f, 0.0f, 1.0f, // ROJO
-            1.0f, 1.0f, 0.0f, 1.0f, // AMARILLO
-            0.0f, 1.0f, 0.0f, 1.0f, // VERDE
-            0.0f, 0.0f, 1.0f, 1.0f, // AZUL
-            1.0f, 0.0f, 1.0f, 1.0f, // ROSA
-            1.0f, 1.0f, 1.0f, 1.0f, // BLANCO
-            0.0f, 1.0f, 1.0f, 1.0f, // CYAN
+            0.0f, 1.0f, 1.0f, 1.0f, // Cyan.
+            1.0f, 0.0f, 0.0f, 1.0f, // Rojo.
+            1.0f, 1.0f, 0.0f, 1.0f, // Amarillo.
+            0.0f, 1.0f, 0.0f, 1.0f, // Verde.
+            0.0f, 0.0f, 1.0f, 1.0f, // Azul.
+            1.0f, 0.0f, 1.0f, 1.0f, // Rosa.
+            1.0f, 1.0f, 1.0f, 1.0f, // Blanco.
+            0.0f, 1.0f, 1.0f, 1.0f, // Cyan.
     };
 
     // Orden en que se dibujan los triangulos
@@ -110,7 +111,6 @@ public class CuboColores {
 
         // Vertex Buffer.
         ByteBuffer byteBuffer = ByteBuffer.allocateDirect(vertices.length * 4);
-
         byteBuffer.order(ByteOrder.nativeOrder());
         vertexBuffer = byteBuffer.asFloatBuffer();
         vertexBuffer.put(vertices);
@@ -128,54 +128,47 @@ public class CuboColores {
         indexBuffer.put(indices);
         indexBuffer.position(0);
 
-        // Se lee el código vertex shader desde archivo
+        // Se lee el código vertex shader desde archivo.
         vertexShaderCode = leerArchivo("CuboColoresVertexShader.glsl",c);
 
-        // Se lee el código fragment shader desde archivo
+        // Se lee el código fragment shader desde archivo.
         fragmentShaderCode = leerArchivo("CuboColoresFragmentShader.glsl",c);
 
-        // Se inicializa el programa (Creacion del programa "OpenGL ES" en vacio).
+        // Crea un programa OpenGL ES vacío.
         mProgram = GLES20.glCreateProgram();
 
-        /*// Se agregan los shader code al programa.
-        GLES20.glAttachShader(mProgram, MyGLRenderer.loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode));
-        GLES20.glAttachShader(mProgram, MyGLRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode));*/
-
-        // Se agregan los shader code al programa.
+        // Se cargan los shaders.
         int vertexShader = MyGLRenderer.loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
         int fragmentShader = MyGLRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
 
+        // Agrega el vertex shader al programa.
         GLES20.glAttachShader(mProgram, vertexShader);
+
+        // Agrega el fragment shader al programa.
         GLES20.glAttachShader(mProgram, fragmentShader);
 
-        // Creación del programa "OpenGL ES" ejecutable.
+        // Crea un programa OpenGL ES ejecutable.
         GLES20.glLinkProgram(mProgram);
     }
 
-    /*
-     * Encapsula las instrucciones de OpenGL ES para dibujar la figura.
-     *
-     * @param mvpMatrix
-     *      La matriz Model View Project en la que se dibuja la figura.
-     */
     public void draw(float[] mvpMatrix) {
 
-        // Se agrega el programa al entorno OpenGL ES.
+        // Agrega el programa al ambiente de OpenGL ES.
         GLES20.glUseProgram(mProgram);
 
-        // Se preparan los datos de las coordenadas del cubo.
+        // Obtiene el identificador vPosition desde vertex shader.
         positionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
         GLES20.glEnableVertexAttribArray(positionHandle);
         GLES20.glVertexAttribPointer(
                 positionHandle, 3, GLES20.GL_FLOAT, false, vertexStride, vertexBuffer);
 
-        // Se preparan los datos de color del cubo.
+        // Obtiene el identificador a_color desde fragment shader.
         colorHandle = GLES20.glGetAttribLocation(mProgram, "a_color");
         GLES20.glEnableVertexAttribArray(colorHandle);
         GLES20.glVertexAttribPointer(
                 colorHandle, 4, GLES20.GL_FLOAT, false, COLOR_STRIDE, colorBuffer);
 
-        // Se aplica la transformación de proyección y vista.
+        // Obtiene el identificador para la matriz de transformacion de la figura.
         vPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
         GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, mvpMatrix, 0);
 
@@ -183,11 +176,8 @@ public class CuboColores {
         GLES20.glDrawElements(
                 GLES20.GL_TRIANGLES, indices.length, GLES20.GL_UNSIGNED_BYTE, indexBuffer);
 
-        // Se Deshabilitan las matrices de vértices.
+        // Desactiva los identificadores.
         GLES20.glDisableVertexAttribArray(positionHandle);
         GLES20.glDisableVertexAttribArray(colorHandle);
-
-        /*GLES20.glEnable(GLES20.GL_CULL_FACE);*/
-
     }
 }
